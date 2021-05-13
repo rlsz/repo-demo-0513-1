@@ -7,6 +7,10 @@ import test from './test/router'
 Vue.use(VueRouter)
 
 const routes = [
+    {
+        path: '',
+        redirect: '/main'
+    },
     main,
     example
 ]
