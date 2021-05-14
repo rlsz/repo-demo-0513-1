@@ -1,18 +1,21 @@
 <template>
-  <app-dialog-bridge class="my-dialog no-shadow">
-    <span slot="title" style="margin-left: auto;">Request an invite</span>
+  <app-dialog-bridge class="no-shadow">
+    <span slot="title">Request an invite</span>
     <div class="flex vertical">
-      <input type="text" placeholder="Full name"/>
-      <input type="email" placeholder="Email"/>
-      <input type="email" placeholder="Confirm email"/>
+      <input v-model="form.name" type="text" placeholder="Full name"/>
+      <input v-model="form.email" type="email" placeholder="Email"/>
+      <input v-model="form.confirmEmail" type="email" placeholder="Confirm email"/>
     </div>
-    <button slot="footer" class="app-form" @click="submit" v-loading-target>Send</button>
+    <template slot="footer">
+      <button class="app-form" @click="submit" v-loading-target>Send</button>
+      <div class="error-message">{{err}}</div>
+    </template>
   </app-dialog-bridge>
 </template>
 
 <script>
 import {Dialog} from "@/public/dialogs";
-import {LoggerService} from "@/public/logger";
+import {Log, LoggerService} from "@/public/logger";
 import {AjaxService} from "@/public/base";
 
 export default {
@@ -25,7 +28,12 @@ export default {
   },
   data() {
     return {
-
+      form: {
+        name: '',
+        email: '',
+        confirmEmail: ''
+      },
+      err: null
     }
   },
   computed: {
@@ -37,8 +45,39 @@ export default {
   },
   methods: {
     submit() {
-      this.ajax.post('submit', {}).then(res => {
-        this.ls.success('success')
+      this.err = ''
+      if(!this.form.name) {
+        this.err = 'Please fill your name.'
+        return
+      }
+      if(!/^\s*(.{3,})\s*$/gi.test(this.form.name)) {
+        this.err = 'Full name needs to be at least 3 characters long.'
+        return
+      } else {
+        this.form.name = RegExp.$1
+      }
+      if(!this.form.email) {
+        this.err = 'Please fill your email.'
+        return
+      }
+      if(!/^\s*([a-z0-9]+@[a-z0-9]+\.?[a-z0-9]*)\s*$/gi.test(this.form.email)) {
+        this.err = 'Email needs to be in validation email format.'
+        return
+      } else {
+        this.form.email = RegExp.$1
+      }
+      if(this.form.confirmEmail !== this.form.email) {
+        this.err = 'The confirm email is distinguished from your email.'
+        return
+      }
+      this.ajax.post('https://l94wc2001h.execute-api.ap-southeast-2.amazonaws.com/prod/fake-auth', {
+        name: this.form.name,
+        email: this.form.email
+      }).then(res => {
+        this.ls.success(res)
+        this.dialog.close(true)
+      }).catch(err => {
+        this.err = new Log(err).summary
       })
     }
   }
@@ -46,20 +85,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.my-dialog {
-  min-width: 300px;
-  /deep/ .header {
-    &:after {
-      content: '';
-      background: black;
-      height: 1px;
-      width: 20px;
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-    }
-  }
+.app-dialog-bridge {
+  width: 300px;
 }
 input {
   font-size: 14px;
@@ -69,5 +96,8 @@ input {
   color: #323335;
   margin: 10px 0;
   padding: 0 4px;
+}
+.error-message {
+  color: #E94848;
 }
 </style>
