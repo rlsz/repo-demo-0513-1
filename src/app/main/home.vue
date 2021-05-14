@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import {DialogService} from "@/public/dialogs";
+import {DialogService, Model} from "@/public/dialogs";
 import request from "./components/request";
 import done from "./components/done";
 
@@ -20,9 +20,13 @@ export default {
   },
   methods: {
     requestInvite() {
-      this.ds.open(request).afterClosed().then(res => {
+      this.ds.open(request, {
+        model: Model.float
+      }).afterClosed().then(res => {
         if(res) {
-          return this.ds.open(done).afterClosed()
+          return this.ds.open(done, {
+            model: Model.float
+          }).afterClosed()
         }
       }).then(res => {
         console.log(res)

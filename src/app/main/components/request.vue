@@ -86,7 +86,7 @@ export default {
 
 <style lang="less" scoped>
 .app-dialog-bridge {
-  width: 300px;
+  //width: 300px;
 }
 input {
   font-size: 14px;

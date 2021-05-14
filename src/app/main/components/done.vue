@@ -38,7 +38,7 @@ export default {
 
 <style lang="less" scoped>
 .app-dialog-bridge {
-  min-width: 300px;
+  //min-width: 300px;
 }
 .content {
   color: #95a4bd;
