@@ -4,8 +4,10 @@ html {
 
 .bridge-default-dialog {
   > .header {
+    padding: 20px 10px 10px !important;
+    justify-content: center;
     > :first-child {
-      margin-left: auto;
+      text-align: center;
     }
     &:after {
       content: '';
@@ -16,6 +18,9 @@ html {
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
+    }
+    > span.close {
+      display: none !important;
     }
   }
 }

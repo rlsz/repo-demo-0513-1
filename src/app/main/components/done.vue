@@ -43,5 +43,6 @@ export default {
 .content {
   color: #95a4bd;
   padding: 20px;
+  text-align: center;
 }
 </style>

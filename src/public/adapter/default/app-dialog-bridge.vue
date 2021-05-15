@@ -1,5 +1,5 @@
 <template>
-  <div class="page-frame app-dialog-bridge bridge-default-dialog" :class="{center:center}">
+  <div class="page-frame bridge-default-dialog" :class="{center:center}">
     <div class="header">
       <span v-if="model===Model.fillAvailable" class="back" @click="close"></span>
       <slot name="title">

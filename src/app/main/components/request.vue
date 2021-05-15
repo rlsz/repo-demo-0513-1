@@ -96,6 +96,8 @@ input {
   color: #323335;
   margin: 10px 0;
   padding: 0 4px;
+  border: 1px solid gray;
+  border-radius: 4px;
 }
 .error-message {
   color: #E94848;

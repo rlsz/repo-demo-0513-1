@@ -1,12 +1,16 @@
 <template>
-  <div id="app" class="flex vertical" v-platform>
-    <div style="margin-left: 20px;">BROCCOLI & CO.</div>
-    <div class="flex vertical fill-content">
-      <router-view/>
+  <div id="app" class="page-frame">
+    <div class="header frame-padding">
+      <span>BROCCOLI & CO.</span>
     </div>
-    <div class="flex vertical cross-center">
-      <span>Made with ♥ in Melbourne.</span>
-      <span>© 2016 Broccoli & Co. All rights reserved.</span>
+    <div class="body">
+      <div class="content flex vertical frame-padding">
+        <router-view/>
+      </div>
+      <div class="company-info flex vertical cross-center frame-padding">
+        <span>Made with ♥ in Melbourne.</span>
+        <span>© 2016 Broccoli & Co. All rights reserved.</span>
+      </div>
     </div>
   </div>
 </template>
@@ -68,10 +72,28 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #app {
-  flex: 1 1 0px;
-  overflow: hidden;
-  color: rgba(51, 51, 51, 1);
+
+}
+.header {
+  border-bottom: 1px solid gray;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  > * {
+    padding: 0 20px;
+  }
+}
+.company-info {
+  text-align: center;
+  border-top: 1px solid gray;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  > * ~ * {
+    margin-top: 4px;
+  }
+}
+.content {
+  margin: auto;
 }
 </style>
