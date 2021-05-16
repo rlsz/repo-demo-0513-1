@@ -15,7 +15,7 @@ steps:
 - You can modify any file in `src`. The change will be shown after compiling.
 
 ## building
-Run command `npm run build`, this `dist` will be shown in project root directory. Zip and upload this folder to a well-configured server to deploy it.
+Run command `npm run build`, the `dist` will be shown in project root directory. Zip and upload this folder to a well-configured server to deploy it.
 
 For this demo, you can try a nodejs server in test_build directory:
 - Enter test_build by `cd test_build`
