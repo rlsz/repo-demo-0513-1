@@ -2,13 +2,17 @@
   <app-dialog-bridge class="no-shadow">
     <span slot="title">Request an invite</span>
     <div class="flex vertical">
-      <input v-model="form.name" type="text" placeholder="Full name"/>
-      <input v-model="form.email" type="email" placeholder="Email"/>
-      <input v-model="form.confirmEmail" type="email" placeholder="Confirm email"/>
+      <input :class="{invalid:errors.name}" v-model="form.name" type="text" placeholder="Full name"/>
+      <span class="error-message">{{ errors.name }}</span>
+      <input :class="{invalid:errors.email}" v-model="form.email" type="email" placeholder="Email"/>
+      <span class="error-message">{{ errors.email }}</span>
+      <input :class="{invalid:errors.confirmEmail}" v-model="form.confirmEmail" type="email"
+             placeholder="Confirm email"/>
+      <span class="error-message">{{ errors.confirmEmail }}</span>
     </div>
     <template slot="footer">
       <button class="app-form" @click="submit" v-loading-target>Send</button>
-      <div class="error-message">{{err}}</div>
+      <span class="error-message">{{ errors.result }}</span>
     </template>
   </app-dialog-bridge>
 </template>
@@ -33,7 +37,30 @@ export default {
         email: '',
         confirmEmail: ''
       },
-      err: null
+      rules: {
+        name: [
+          {validator: val => !val, message: 'Name is required.'},
+          {
+            validator: val => !/^\s*(.{3,})\s*$/gi.test(val),
+            message: 'Full name needs to be at least 3 characters long.'
+          }
+        ],
+        email: [
+          {validator: val => !val, message: 'Email is required.'},
+          {
+            validator: val => !/^\s*([a-z0-9]+@[a-z0-9]+[.a-z0-9]*)\s*$/gi.test(val),
+            message: 'Email needs to be in validation email format.'
+          },
+        ],
+        confirmEmail: [
+          {validator: val => !val, message: 'Confirm email is required.'},
+          {
+            validator: (val, parent) => val !== parent.email,
+            message: 'The confirm email is distinguished from your email.'
+          },
+        ]
+      },
+      errors: {}
     }
   },
   computed: {
@@ -45,40 +72,35 @@ export default {
   },
   methods: {
     submit() {
-      this.err = ''
-      if(!this.form.name) {
-        this.err = 'Please fill your name.'
-        return
-      }
-      if(!/^\s*(.{3,})\s*$/gi.test(this.form.name)) {
-        this.err = 'Full name needs to be at least 3 characters long.'
-        return
-      } else {
-        this.form.name = RegExp.$1
-      }
-      if(!this.form.email) {
-        this.err = 'Please fill your email.'
-        return
-      }
-      if(!/^\s*([a-z0-9]+@[a-z0-9]+\.?[a-z0-9]*)\s*$/gi.test(this.form.email)) {
-        this.err = 'Email needs to be in validation email format.'
-        return
-      } else {
-        this.form.email = RegExp.$1
-      }
-      if(this.form.confirmEmail !== this.form.email) {
-        this.err = 'The confirm email is distinguished from your email.'
+      this.errors = this.validate()
+      if (Object.keys(this.errors).length) {
         return
       }
       this.ajax.post('https://l94wc2001h.execute-api.ap-southeast-2.amazonaws.com/prod/fake-auth', {
         name: this.form.name,
         email: this.form.email
+      }, {
+        log: false
       }).then(res => {
         this.ls.success(res)
         this.dialog.close(true)
       }).catch(err => {
-        this.err = new Log(err).summary
+        this.errors = {
+          result: new Log(err).summary
+        }
       })
+    },
+    validate() {
+      return Object.keys(this.rules).reduce((errors, key) => {
+        const parent = this.form
+        const val = this.form[key]
+        const rules = this.rules[key]
+        const error = rules.find(rule => rule.validator(val, parent))
+        if (error) {
+          errors[key] = error.message
+        }
+        return errors
+      }, {})
     }
   }
 }
@@ -88,6 +110,7 @@ export default {
 .app-dialog-bridge {
   //width: 300px;
 }
+
 input {
   font-size: 14px;
   line-height: 22px;
@@ -98,7 +121,11 @@ input {
   padding: 0 4px;
   border: 1px solid gray;
   border-radius: 4px;
+  &.invalid {
+    border-color: #E94848;
+  }
 }
+
 .error-message {
   color: #E94848;
 }

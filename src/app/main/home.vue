@@ -1,6 +1,6 @@
 <template>
   <div class="flex vertical cross-center home">
-    <span class="font-1">A better way to enjoy every day.</span>
+    <h1>A better way to enjoy every day.</h1>
     <span>Be the first to know when we launch.</span>
     <button class="app-form" @click="requestInvite">Request an invite</button>
   </div>
@@ -41,15 +41,15 @@ export default {
   text-align: center;
   color: rgba(0, 0, 0, 0.6);
   margin: auto;
-  padding: 20px;
-
-  > * ~ * {
-    margin-top: 8px;
-  }
+  padding: 10px;
 }
 
-.font-1 {
-  font-size: 32px;
+h1 {
+  font-size: 28px;
   color: rgba(0, 0, 0, 1);
+  margin-top: 0px;
+}
+button {
+  margin-top: 8px;
 }
 </style>

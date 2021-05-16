@@ -10,7 +10,7 @@ module.exports = {
     pages: {
         index: {
             entry: 'src/main.js',
-            title: 'vue项目模版'
+            title: 'demo'
         }
     }
 }

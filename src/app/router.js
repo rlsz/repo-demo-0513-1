@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import example from './example/router'
 import main from './main/router'
-import test from './test/router'
 
 Vue.use(VueRouter)
 
@@ -11,13 +9,8 @@ const routes = [
         path: '',
         redirect: '/main'
     },
-    main,
-    example
+    main
 ]
-
-if (process.env.VUE_APP_DEBUG === 'true') {
-    routes.push(test)
-}
 
 function menuAdapter(menus, path = '') {
     if(!menus || !menus.length) {
